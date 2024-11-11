@@ -2,7 +2,14 @@
 import styles from "./MealItem.module.css";
 import { currencyFormatter } from "../util/fomatting";
 import Button from "./UI/Button";
+import { useContext } from "react";
+import CartContext from "./store/CartContext";
 const MealItem=({meal})=>{
+
+    const cartCtx=useContext(CartContext);
+
+    // function to hadnle the add item operation
+    const handleAddItem=(item)=>{cartCtx.addItem(meal)};
     return (
         <li className={styles["meal-item"]}>
             <article>
@@ -14,7 +21,7 @@ const MealItem=({meal})=>{
                 </div>
 
                 <p className={styles["meal-item-actions"]}>
-               <Button>Add to cart</Button>
+               <Button onClick={handleAddItem}>Add to cart</Button>
                 </p>
                
             </article>
