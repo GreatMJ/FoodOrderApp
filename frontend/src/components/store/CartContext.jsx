@@ -33,10 +33,10 @@ const cartReducer=(state,action)=>{
 
     if(action.type==='REMOVE_ITEM'){
         const existingItemIndex=state.items.findIndex((item)=>item.id===action.id);     // get the index of item to be deleted
-
+       const existingItem=state.items[existingItemIndex];
         const updatedItems=[...state.items];
 
-        if(existingItemIndex.quantity===1){
+        if(existingItem.quantity===1){
             updatedItems.splice(existingItemIndex,1);             // remove item from the cart
         }else{
         const existingItem=state.items[existingItemIndex];
