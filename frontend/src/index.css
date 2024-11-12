@@ -84,6 +84,24 @@ h1 {
   background-color: rgba(0, 0, 0, 0.55);
 }
 
+.loading-message {
+  font-size: 1.2em; /* Slightly larger font */
+  color: #555; /* Neutral gray color */
+  font-style: italic; /* Italicized to indicate status */
+  text-align: center; /* Center the text */
+  animation: fade 1.5s infinite; /* Adds a fading effect */
+}
+
+@keyframes fade {
+  0%,
+  100% {
+    opacity: 0.5;
+  } /* Start and end at lower opacity */
+  50% {
+    opacity: 1;
+  } /* Midway at full opacity */
+}
+
 @keyframes fade-slide-up {
   from {
     opacity: 0;
