@@ -24,8 +24,14 @@ const useHttp = (url, config, initialData) => {
   // manage loading state
   const [isLoading, setIsLoading] = useState(false);
 
+  // to clear the data
   const clearData = () => {
     setData(initialData);
+  };
+
+  // to set the error to null
+  const clearError = () => {
+    setError(null);
   };
 
   const sendRequest = useCallback(
@@ -55,6 +61,7 @@ const useHttp = (url, config, initialData) => {
     error,
     sendRequest,
     clearData,
+    clearError,
   };
 };
 export default useHttp;
