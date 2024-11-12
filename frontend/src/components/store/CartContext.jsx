@@ -1,75 +1,99 @@
 import { act, createContext, useReducer } from "react";
 
-
-
-const CartContext=createContext({
-    items:[],
-    addItem:(item)=>{},
-    removeItem:(id)=>{}
-})
+const CartContext = createContext({
+  items: [],
+  addItem: (item) => {},
+  removeItem: (id) => {},
+  clearCart: () => {},
+});
 
 // reducer funciton
-const cartReducer=(state,action)=>{
-    if(action.type==='ADD_ITEM'){
-      const existingItemIndex=state.items.findIndex((item)=>item.id===action.item.id);   // check weather item already present or not
+const cartReducer = (state, action) => {
+  if (action.type === "ADD_ITEM") {
+    const existingItemIndex = state.items.findIndex(
+      (item) => item.id === action.item.id
+    ); // check weather item already present or not
 
-      // create new array for updated items
-      const updatedItems=[...state.items];
+    // create new array for updated items
+    const updatedItems = [...state.items];
 
-      if(existingItemIndex>-1){                  // item already exist
-        const existingItem=state.items[existingItemIndex];
+    if (existingItemIndex > -1) {
+      // item already exist
+      const existingItem = state.items[existingItemIndex];
 
-        const updatedItem={...existingItem, quantity: existingItem.quantity+1};
+      const updatedItem = {
+        ...existingItem,
+        quantity: existingItem.quantity + 1,
+      };
 
-        updatedItems[existingItemIndex]=updatedItem;
-      }else{                                  // item newly adding in the cart
-          updatedItems.push({...action.item,quantity:1});
-      }
-      // return the updated state
-      return {...state,items:updatedItems}
-
+      updatedItems[existingItemIndex] = updatedItem;
+    } else {
+      // item newly adding in the cart
+      updatedItems.push({ ...action.item, quantity: 1 });
     }
+    // return the updated state
+    return { ...state, items: updatedItems };
+  }
 
+  if (action.type === "REMOVE_ITEM") {
+    const existingItemIndex = state.items.findIndex(
+      (item) => item.id === action.id
+    ); // get the index of item to be deleted
+    const existingItem = state.items[existingItemIndex];
+    const updatedItems = [...state.items];
 
-    if(action.type==='REMOVE_ITEM'){
-        const existingItemIndex=state.items.findIndex((item)=>item.id===action.id);     // get the index of item to be deleted
-       const existingItem=state.items[existingItemIndex];
-        const updatedItems=[...state.items];
-
-        if(existingItem.quantity===1){
-            updatedItems.splice(existingItemIndex,1);             // remove item from the cart
-        }else{
-        const existingItem=state.items[existingItemIndex];
-           const updatedItem={ ...existingItem, quantity:existingItem.quantity-1 };
-           updatedItems[existingItemIndex]=updatedItem;
-        }
-        return {...state,items:updatedItems};
+    if (existingItem.quantity === 1) {
+      updatedItems.splice(existingItemIndex, 1); // remove item from the cart
+    } else {
+      const existingItem = state.items[existingItemIndex];
+      const updatedItem = {
+        ...existingItem,
+        quantity: existingItem.quantity - 1,
+      };
+      updatedItems[existingItemIndex] = updatedItem;
     }
+    return { ...state, items: updatedItems };
+  }
 
-    return state;
-}
+  if (action.type === "CLEAR_CART") {
+    return { ...state, items: [] };
+  }
+
+  return state;
+};
 
 // wrapper
-export function CartContextProvider({children}){
+export function CartContextProvider({ children }) {
+  // state management using useReducer
+  const [cart, dispatchCartAction] = useReducer(cartReducer, { items: [] });
 
-    // state management using useReducer
-   const [cart,dispatchCartAction]= useReducer(cartReducer,{items:[]});
+  // to add item
+  const addItem = (item) => {
+    dispatchCartAction({ type: "ADD_ITEM", item });
+  };
 
-   // to add item
-   const addItem=(item)=>{ dispatchCartAction({type:'ADD_ITEM', item})};
+  // to remove item
+  const removeItem = (id) => {
+    dispatchCartAction({ type: "REMOVE_ITEM", id });
+  };
 
-   // to remove item
-   const removeItem=(id)=>{dispatchCartAction({type:'REMOVE_ITEM', id})};
+  // to clear the cart
+  const clearCart = () => {
+    dispatchCartAction({ type: "CLEAR_CART" });
+  };
 
-   const cartContext={
+  const cartContext = {
     items: cart.items,
     addItem,
-    removeItem
-   }
+    removeItem,
+    clearCart,
+  };
 
-   console.log(cartContext);
-   
-    return<CartContext.Provider value={cartContext}>{children}</CartContext.Provider> 
+  console.log(cartContext);
+
+  return (
+    <CartContext.Provider value={cartContext}>{children}</CartContext.Provider>
+  );
 }
 
 export default CartContext;
