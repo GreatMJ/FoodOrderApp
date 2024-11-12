@@ -44,12 +44,13 @@ const CheckOut = () => {
     error,
     sendRequest,
     clearData,
+    clearError,
   } = useHttp("http://localhost:3000/orders", requestConfig);
 
   // function to handle order submittion
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    clearError(); // clear the error
     const fd = new FormData(event.target);
     const customerData = Object.fromEntries(fd.entries());
 
@@ -102,13 +103,23 @@ const CheckOut = () => {
       <form className={styles.control} onSubmit={handleSubmit}>
         <h2>Checkout</h2>
         <p>Total Amount : {currencyFormatter.format(cartTotal)} </p>
-        <Input label="Full Name" type="text" id="name" />
-        <Input label="E-mail Address" type="email" id="email" />
-        <Input label="Street" type="text" id="street" />
+        <Input label="Full Name" type="text" id="name" onFocus={clearError} />
+        <Input
+          label="E-mail Address"
+          type="email"
+          id="email"
+          onFocus={clearError}
+        />
+        <Input label="Street" type="text" id="street" onFocus={clearError} />
 
         <div className={styles["control-row"]}>
-          <Input label="Postal Code" type="text" id="postal-code" />
-          <Input label="City" type="text" id="city" />
+          <Input
+            label="Postal Code"
+            type="text"
+            id="postal-code"
+            onFocus={clearError}
+          />
+          <Input label="City" type="text" id="city" onFocus={clearError} />
         </div>
 
         {error && <Error title="Failed to submit the order" message={error} />}
