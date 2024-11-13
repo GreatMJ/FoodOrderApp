@@ -16,6 +16,7 @@ const requestConfig = {
   },
 };
 
+const url = import.meta.env.VITE_APP_URL;
 const CheckOut = () => {
   const cartCtx = useContext(CartContext);
   const userProgressCtx = useContext(UserProgressContext);
@@ -38,6 +39,7 @@ const CheckOut = () => {
   };
 
   // custome hook to sent request
+
   const {
     isLoading: isSending,
     data,
@@ -45,7 +47,7 @@ const CheckOut = () => {
     sendRequest,
     clearData,
     clearError,
-  } = useHttp("http://localhost:3000/orders", requestConfig);
+  } = useHttp(`${url}/orders`, requestConfig);
 
   // function to handle order submittion
   const handleSubmit = (event) => {
